@@ -363,6 +363,94 @@ void loop() {
   // JOYSTICK 2
   // ---------------------------------------------------------
   
+  // Set J2 joystick mode
+  digitalWrite(J2KeypadMode, true);
+  digitalWrite(J2JoystickMode, false);
+  delayMicroseconds(10);
+  
+  // UP <-> DOWN
+  byte j2y = NO_PRESS;
+
+  if (!digitalRead(J2UP))
+    j2y = 0;
+  else if (!digitalRead(J2DOWN))
+    j2y = 1;
+
+  if (j2y != _lastJ2Y) {
+
+    if (j2y == 0)
+      _j2.setYAxis(-127);
+    else if (j2y == 1)
+      _j2.setYAxis(127);
+    else
+      _j2.setYAxis(0);
+
+    _lastJ2Y = j2y;
+  }
+
+  // LEFT <-> RIGHT
+  byte j2x = NO_PRESS;
+
+  if (!digitalRead(J2LEFT))
+    j2x = 0;
+  else if (!digitalRead(J2RIGHT))
+    j2x = 1;
+
+  if (j2x != _lastJ2X) {
+
+    if (j2x == 0)
+      _j2.setXAxis(-127);
+    else if (j2x == 1)
+      _j2.setXAxis(127);
+    else
+      _j2.setXAxis(0);
+
+    _lastJ2X = j2x;
+  }
+
+  // Fire button
+  byte j2a = !digitalRead(J2BUTTON);
+
+  if (j2a != _lastJ2A) {
+      
+     _j2.setButton(0, j2a);
+
+    _lastJ2A = j2a;
+  }
+  
+  // Set keypad mode  
+  digitalWrite(J2KeypadMode, false);
+  digitalWrite(J2JoystickMode, true);
+  delayMicroseconds(10);
+
+  // ARM button
+  byte j2b = !digitalRead(J2BUTTON);
+
+  if (j2b != _lastJ2B) {
+      
+     _j2.setButton(1, j2b);
+
+    _lastJ2B = j2b;
+  }
+
+  // Keypad
+  bool r2 = !digitalRead(J2RIGHT);
+  bool u2 = !digitalRead(J2UP);
+  bool d2 = !digitalRead(J2DOWN);
+  bool l2 = !digitalRead(J2LEFT);
+
+  byte j2k = getKeyboardPressed(r2, u2, d2, l2);
+
+  if (j2k != _lastJ2K) {
+
+    if (_lastJ2K != NO_PRESS)
+      _j2.setButton(_lastJ2K, 0);
+    
+    if (j2k != NO_PRESS)
+      _j2.setButton(j2k, 1);
+
+    _lastJ2K = j2k;
+  }
 
 #endif
 
